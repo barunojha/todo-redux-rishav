@@ -42,8 +42,8 @@ const TodoListItem = ({ id }) => {
   }
 
   const onDelete = () => {
-    dispatch(todoDeleted(todo.id))
-    // dispatch(removeTodo(todo.id))
+    // dispatch(todoDeleted(todo.id))
+    dispatch(removeTodo(todo.id))
   }
 
   const colorOptions = availableColors.map((c) => (
