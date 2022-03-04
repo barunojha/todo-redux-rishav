@@ -1,4 +1,4 @@
-import { fetchTodos, createTodo, updateTodo, deleteTodo } from './api';
+import { fetchTodos, createTodo, updateTodo, deleteTodo, UpdateCompletedTodos, ClearTodosCompleted } from './api';
 
 export const todoAdded = (todo) => ({ type: 'todos/todoAdded', payload: todo })
 
@@ -22,7 +22,10 @@ export const todoUpdated = (payload) => ({
   payload: payload,
 })
 
-export const allTodosCompleted = () => ({ type: 'todos/allCompleted' })
+export const allTodosCompleted = (payload) => ({
+  type: "todos/allCompleted",
+  payload: payload,
+});
 
 export const completedTodosCleared = () => ({ type: 'todos/completedCleared' })
 
@@ -33,7 +36,7 @@ export const todosLoaded = (todos) => ({
   payload: todos,
 })
 
-// Thunk function
+// Thunk functions
 export const handleFetchTodos = () => async (dispatch) => {
   dispatch(todosLoading())
   const response = await fetchTodos()
@@ -74,4 +77,45 @@ export function removeTodo(id) {
     const response = await deleteTodo(id)
     dispatch(todoDeleted(response.todo))
   }
+}
+
+// export function handleAllTodosCompleted(payload) {
+//   return async function (dispatch, getState) {
+//     const response = await updateTodo(payload)
+//     dispatch(allTodosCompleted())
+//   }
+// }
+
+export function allCompletedTodos() {
+  return async function (dispatch, getState) {
+    const { todos } = getState();
+    const response = await UpdateCompletedTodos(
+      todos.entities.filter((todo) => {
+        return !todo.completed;
+      })
+    );
+    console.log({
+      ...response.todo,
+      completed: true,
+    });
+    dispatch(
+      allTodosCompleted({
+        ...response.todo,
+        completed: true,
+      })
+    );
+  };
+}
+
+export function completedClearedTodos() {
+  return async function (dispatch, getState) {
+    const { todos } = getState();
+    const response = await ClearTodosCompleted(
+      todos.entities.filter((item) => {
+        return item.completed;
+      })
+    );
+    console.log(response);
+    dispatch(completedTodosCleared());
+  };
 }

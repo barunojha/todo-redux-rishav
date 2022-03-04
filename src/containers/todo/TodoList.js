@@ -26,7 +26,7 @@ const TodoList = () => {
     return <TodoListItem key={todoId} id={todoId} />
   })
 
-  return <ul className="todo-list" key={''}>{renderedListItems}</ul>
+  return <ul className="todo-list">{renderedListItems}</ul>
 }
 
 export default TodoList

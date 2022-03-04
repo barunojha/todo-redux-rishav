@@ -28,3 +28,26 @@ export const deleteTodo = (id) => { // 6
   const url = `/todos/${id}`; // 6
   return axios.delete(url).then(res => res.data); 
 }
+
+export const UpdateCompletedTodos = (payload) => {
+  console.log(payload);
+  const response = Promise.all(
+    payload.map((todo) => {
+      return updateTodo({
+        ...todo,
+        completed: true,
+      });
+    })
+  );
+
+  return response;
+};
+
+export const ClearTodosCompleted = (payload) => {
+  const response = Promise.all(
+    payload.map((todo) => {
+      return deleteTodo(todo.id);
+    })
+  );
+  return response;
+};
